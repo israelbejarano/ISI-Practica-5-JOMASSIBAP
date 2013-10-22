@@ -5,7 +5,8 @@ var sprites = {
     enemy_bee: { sx: 79, sy: 0, w: 37, h: 43, frames: 1 },
     enemy_ship: { sx: 116, sy: 0, w: 42, h: 43, frames: 1 },
     enemy_circle: { sx: 158, sy: 0, w: 32, h: 33, frames: 1 },
-    explosion: { sx: 0, sy: 64, w: 64, h: 64, frames: 12 }
+    explosion: { sx: 0, sy: 64, w: 64, h: 64, frames: 12 },
+	fire_ball: {sx: 0, sy: 64, w: 64, h: 64, frames: 12}
 };
 
 var enemies = {
@@ -213,6 +214,20 @@ var PlayerShip = function() {
 	    this.board.add(new PlayerMissile(this.x,this.y+this.h/2));
 	    this.board.add(new PlayerMissile(this.x+this.w,this.y+this.h/2));
 	}
+	if (Game.keys['fballi'] && this.reload < 0){
+		Game.keys['fballi'] = false;
+		this.reload = this.reloadTime;
+		//Añadimos el FireballI y el FireBalld
+		this.board.add(new FireBallI(this.x,this.y+this.h/2));
+		//this.board.add(new FireBallD(this.x+this.w,this.y+this.h/2));
+	}
+	if (Game.keys['fballd'] && this.reload < 0){
+		Game.keys['fballd'] = false;
+		this.reload = this.reloadTime;
+		//Añadimos el FireballI y el FireBalld
+		//this.board.add(new FireBallI(this.x,this.y+this.h/2));
+		this.board.add(new FireBallD(this.x+this.w,this.y+this.h/2));
+	}
     };
 };
 
@@ -252,6 +267,44 @@ PlayerMissile.prototype.step = function(dt)  {
     }
 };
 
+//------------------FIREBALLI---------------------
+var FireBallI = function(x,y) {
+	this.setup('fire_ball', {vy: -1500, damage: 100});
+	this.x = x - this.w/2;
+    this.y = y - this.h; 
+};
+	
+FireBallI.prototype = new Sprite();
+FireBallI.prototype.type = OBJECT_PLAYER_PROJECTILE;
+
+FireBallI.prototype.step = function(dt) {
+	var vx = -500;
+	this.y += this.vy * Math.pow(dt,2) + dt - 15; //this.y += this.vy * dt;//v0sen(teta)dt  y   v0sen(teta)dt - 1/2dt²
+    this.x += vx * dt;
+	var collision = this.board.collide(this,OBJECT_ENEMY);
+	if(collision){
+		collision.hit(this.damage);
+	}
+};
+//------------------FIREBALLD---------------------
+var FireBallD = function(x,y) {
+	this.setup('fire_ball', {vy: -1500, damage:100});
+	this.x = x - this.w/2;
+    this.y = y - this.h; 
+};
+	
+FireBallD.prototype = new Sprite();
+FireBallD.prototype.type = OBJECT_PLAYER_PROJECTILE;
+
+FireBallD.prototype.step = function(dt) {
+	var vx = 500;
+	this.y += this.vy * Math.pow(dt,2) + dt - 15; //this.y += this.vy * dt;//v0sen(teta)dt  y   v0sen(teta)dt - 1/2dt²
+    this.x += vx * dt;
+	var collision = this.board.collide(this,OBJECT_ENEMY);
+	if(collision){
+		collision.hit(this.damage);
+	}
+};
 
 // Constructor para las naves enemigas. Un enemigo se define mediante
 // un conjunto de propiedades provenientes de 3 sitios distintos, que
