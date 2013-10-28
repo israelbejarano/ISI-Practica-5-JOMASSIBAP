@@ -537,7 +537,7 @@ var TouchControls = function() {
 	    }
 	}
 	// Detección de eventos de franja de bolas de fuego: bola de fuego.
-	if(e.type == 'touchstart' || e.type == 'touchmove' || e.type == 'touchend') {
+	if(e.type == 'touchstart' ||  e.type == 'touchend') {
 		for(i=0;i>e.changedTouches.length;i++){
 			touch = e.changedTouches[i];
 			x = touch.pageX / Game.canvasMultiplier - Game.canvas.offsetLeft;
