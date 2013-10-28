@@ -477,6 +477,8 @@ var TouchControls = function() {
 	this.drawSquare(ctx,gutterWidth,yLoc,"\u25C0", Game.keys['left']);
 	this.drawSquare(ctx,unitWidth + gutterWidth,yLoc,"\u25B6", Game.keys['right']);
 	this.drawSquare(ctx,4*unitWidth,yLoc,"A",Game.keys['fire']);
+	this.drawSquare(ctx,unitWidth + 7*gutterWidth,yLoc,"BI",Game.keys['fballi']);
+	this.drawSquare(ctx,unitWidth + 13*gutterWidth,yLoc,"BD",Game.keys['fballi']);
 
 	// Recupera el estado salvado al principio del método
 	ctx.restore();
@@ -524,15 +526,25 @@ var TouchControls = function() {
 		// Sólo consideramos dedos que han intervenido en el
 		// evento actual (touchstart o touchend), por lo que 
                 // miramos en changedTouches
-		touch = e.changedTouches[i];
+			touch = e.changedTouches[i];
 
 		// Al fijarnos sólo en las coordenadas X hacemos que toda
 		// la franja vertical de cada botón sea activa.
-		x = touch.pageX / Game.canvasMultiplier - Game.canvas.offsetLeft;
-		if(x > 4 * unitWidth) {
-		    Game.keys['fire'] = (e.type == 'touchstart');
-		}
+			x = touch.pageX / Game.canvasMultiplier - Game.canvas.offsetLeft;
+			if(x > 4 * unitWidth) {
+		    	Game.keys['fire'] = (e.type == 'touchstart');
+			}
 	    }
+	}
+	// Detección de eventos de franja de bolas de fuego: bola de fuego.
+	if(e.type == 'touchstart' || e.type == 'touchmove' || e.type == 'touchend') {
+		for(i=0;i>e.changedTouches.length;i++){
+			touch = e.changedTouches[i];
+			x = touch.pageX / Game.canvasMultiplier - Game.canvas.offsetLeft;
+			if (x > unitWidth + 7*gutterWidth){
+				Game.keys['fballi'] = (e.type == 'touchstart');
+			}
+		}
 	}
     };
 
